@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB 히어로 테스트</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Gowun Dodum) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 기본 폰트 설정 */
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 페이지 전환을 위한 기본 스타일 */
+        .page {
+            display: none; /* 모든 페이지를 일단 숨김 */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .page.active {
+            display: block; /* 활성화된 페이지만 보여줌 */
+        }
+
+        /* 질문 슬라이드 스타일 */
+        .question-slide {
+            display: none;
+        }
+        .question-slide.active {
+            display: block;
+        }
+
+        /* 페이드인 애니메이션 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 커스텀 버튼 호버 효과 */
+        .choice-btn {
+            transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 이미지 로딩 오류 방지를 위한 스타일 */
+        img {
+            object-fit: cover; /* 이미지가 잘리더라도 컨테이너를 채움 */
+            background-color: #f3f4f6; /* 로딩 중 배경색 */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-200 min-h-screen flex items-center justify-center p-4">
+
+    <!-- 퀴즈 전체를 감싸는 컨테이너 -->
+    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8 md:p-12 text-center overflow-hidden">
+
+        <!-- 1. 시작 페이지 -->
+        <div id="start-page" class="page active">
+            <h1 class="text-5xl md:text-7xl font-black text-blue-700 animate-pulse">IB 히어로가 되어보자!</h1>
+            <h2 class="text-2xl md:text-4xl text-gray-600 mt-4 font-semibold">나는 어떤 히어로?</h2>
+            <p class="text-lg text-gray-500 mt-6 max-w-2xl mx-auto">
+                10개의 간단한 질문에 답하고,
+                <br>당신 마음 속에 숨어있는 진짜 히어로를 만나보세요!
+            </p>
+            <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white text-2xl font-bold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition-transform mt-12">
+                테스트 시작! ⚡
+            </button>
+        </div>
+
+        <!-- 2. 퀴즈 페이지 (질문들) -->
+        <div id="quiz-page" class="page">
+            <!-- 진행도 표시줄 -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <p id="question-counter" class="text-xl text-gray-500 font-semibold mb-2">질문 1 / 10</p>
+
+            <!-- 질문 1 -->
+            <div id="question-1" class="question-slide active">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 낯선 섬에 떨어졌다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('inquirer', 1)" class="choice-btn p-6 bg-gray-50 hover:bg-blue-100 border-2 border-gray-200 hover:border-blue-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"저 바다 너머엔 뭐가 있을까?" 낯선 곳이라도 호기심을 갖고, 배를 만들 재료를 찾아 탐험한다.</p>
+                    </button>
+                    <button onclick="selectAnswer('knowledgeable', 1)" class="choice-btn p-6 bg-gray-50 hover:bg-blue-100 border-2 border-gray-200 hover:border-blue-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"이 섬의 재료로 뭘 만들지?" 낯선 기계 부품을 발견! 꼼꼼히 분석해서 멋진 탈출 장치를 발명한다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 2 -->
+            <div id="question-2" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 우리 반에 큰 문제가 생겼다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('thinker', 2)" class="choice-btn p-6 bg-gray-50 hover:bg-green-100 border-2 border-gray-200 hover:border-green-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"단서가 있을 거야!" 복잡한 일이 생기면, 조용히 앉아 원인을 분석하고 최고의 해결책을 추리한다.</p>
+                    </button>
+                    <button onclick="selectAnswer('communicator', 2)" class="choice-btn p-6 bg-gray-50 hover:bg-yellow-100 border-2 border-gray-200 hover:border-yellow-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"얘들아, 힘내자!" 복잡한 일이라도, 친구들을 격려하고 기운을 북돋우며 다 함께 신나게 해결하자고 외친다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 3 -->
+            <div id="question-3" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 가장 친한 친구가 규칙을 어겼다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('principled', 3)" class="choice-btn p-6 bg-gray-50 hover:bg-yellow-100 border-2 border-gray-200 hover:border-yellow-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"우리는 친구를 버리지 않아!" 나에게 손해라도, 친구와의 약속과 우리 팀의 원칙을 끝까지 지키는 게 가장 중요하다.</p>
+                    </button>
+                    <button onclick="selectAnswer('caring', 3)" class="choice-btn p-6 bg-gray-50 hover:bg-pink-100 border-2 border-gray-200 hover:border-pink-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"괜찮아? 내가 도와줄게!" 규칙보다, 지금 당장 어려움에 처한 친구의 마음을 공감하고 위로하며 돕는 게 먼저다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 4 (스폰지밥/루미로 수정) -->
+            <div id="question-4" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 모두가 피하는 대상과 마주쳤다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('open_minded', 4)" class="choice-btn p-6 bg-gray-50 hover:bg-yellow-100 border-2 border-gray-200 hover:border-yellow-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"겉모습은 중요하지 않아." 퉁명스러운 징징이라도, 언제나 긍정적으로 함께 놀자고 다가간다.</p>
+                    </button>
+                    <button onclick="selectAnswer('risk_taker', 4)" class="choice-btn p-6 bg-gray-50 hover:bg-purple-100 border-2 border-gray-200 hover:border-purple-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"무대 위로!" 모두가 불가능하다고 말리는 위험한 일이라도, 사람들을 지키기 위해 용기를 내어 정면으로 맞선다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 5 (뽀로로/엘사로 수정) -->
+            <div id="question-5" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 중요한 발표를 앞두고 있다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('balanced', 5)" class="choice-btn p-6 bg-gray-50 hover:bg-blue-100 border-2 border-gray-200 hover:border-blue-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"노는 게 제일 좋아!" 발표 준비(지성)도 중요하지만, 친구들과 신나게 놀면서(신체/감정) 기분을 푸는 것도 중요하다.</p>
+                    </button>
+                    <button onclick="selectAnswer('reflective', 5)" class="choice-btn p-6 bg-gray-50 hover:bg-blue-100 border-2 border-gray-200 hover:border-blue-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"나는 누구일까?" 발표를 앞두고, 조용히 '나는 왜 이 일을 하는지', '내가 잘하는 건 무엇인지' 나 자신에 대해 생각한다.</p>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 질문 6 -->
+            <div id="question-6" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 아무도 가보지 않은 비밀의 숲을 발견했다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('inquirer', 6)" class="choice-btn p-6 bg-gray-50 hover:bg-blue-100 border-2 border-gray-200 hover:border-blue-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"저기 가보자!" 무슨 일이 생길지 몰라도, 호기심이 생기면 일단 탐험하고 경험한다.</p>
+                    </button>
+                    <button onclick="selectAnswer('thinker', 6)" class="choice-btn p-6 bg-gray-50 hover:bg-green-100 border-2 border-gray-200 hover:border-green-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"저기 가면 위험해." 숲에 들어가기 전에, '어떤 위험이 있을까?' 논리적으로 먼저 생각하고 계획을 세운다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 7 -->
+            <div id="question-7" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 우리 팀이 위기에 빠졌다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('knowledgeable', 7)" class="choice-btn p-6 bg-gray-50 hover:bg-red-100 border-2 border-gray-200 hover:border-red-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"더 똑똑해져야 해." 내가 아는 모든 지식을 총동원해서, 위기를 해결할 최고의 발명품을 만든다.</p>
+                    </button>
+                    <button onclick="selectAnswer('principled', 7)" class="choice-btn p-6 bg-gray-50 hover:bg-yellow-100 border-2 border-gray-200 hover:border-yellow-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"더 정직해져야 해." 아무리 좋은 방법이라도, 정직하지 않거나 우리 팀의 원칙에 어긋나면 절대 하지 않는다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 8 (조이/스폰지밥으로 수정) -->
+            <div id="question-8" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 내 생각과 전혀 다른 친구를 만났다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('communicator', 8)" class="choice-btn p-6 bg-gray-50 hover:bg-yellow-100 border-2 border-gray-200 hover:border-yellow-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"내 기분은 최고야!" 내 감정과 생각을 숨기지 않고, 다른 사람들에게 자신 있게 표현하며 에너지를 준다.</p>
+                    </button>
+                    <button onclick="selectAnswer('open_minded', 8)" class="choice-btn p-6 bg-gray-50 hover:bg-yellow-100 border-2 border-gray-200 hover:border-yellow-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"네 생각은 어때?" 나와 전혀 다른 친구(예: 물 밖에 사는 다람이)라도, 그 친구의 문화를 존중하고 신기해한다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 9 (안나/뽀로로로 수정) -->
+            <div id="question-9" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 친구를 구하러 가야 한다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('caring', 9)" class="choice-btn p-6 bg-gray-50 hover:bg-pink-100 border-2 border-gray-200 hover:border-pink-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"너를 위해서라면!" 친구를 구하기 위해서라면, 내가 다치는 것을 생각하지 않고 무조건 달려든다.</p>
+                    </button>
+                    <button onclick="selectAnswer('balanced', 9)" class="choice-btn p-6 bg-gray-50 hover:bg-blue-100 border-2 border-gray-200 hover:border-blue-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"괜찮아! 다 방법이 있지!" 친구를 구하기 위해, 감정(마음)만 앞세우기보다, 침착하게 친구들과 힘을 합칠(지성/신체) 계획을 세운다.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 질문 10 -->
+            <div id="question-10" class="question-slide">
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-10">[상황: 나에게 숨겨진 특별한 힘이 생겼다!] 나는...</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="selectAnswer('risk_taker', 10)" class="choice-btn p-6 bg-gray-50 hover:bg-purple-100 border-2 border-gray-200 hover:border-purple-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"두렵지만... 해내고 말겠어!" 이 힘이 위험할 수도 있지만, 모두를 위해 용기를 내어 정면으로 부딪힌다.</p>
+                    </button>
+                    <button onclick="selectAnswer('reflective', 10)" class="choice-btn p-6 bg-gray-50 hover:bg-blue-100 border-2 border-gray-200 hover:border-blue-400 rounded-lg shadow-md cursor-pointer">
+                        <p class="text-lg md:text-xl text-gray-700">"난 왜 이런 힘을 가졌을까?" 조용히 내 마음을 돌아보며, '나는 누구인가' 나 자신을 먼저 이해하려 한다.</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 결과 페이지 -->
+        <div id="result-page" class="page">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">당신의 IB 히어로는...</h2>
+            
+            <!-- 대표 히어로 -->
+            <div class="bg-gradient-to-br from-yellow-100 to-orange-200 rounded-lg p-6 md:p-8 shadow-inner border-2 border-yellow-400">
+                <img id="hero-image" src="" alt="대표 히어로 이미지" class="w-48 h-48 rounded-full mx-auto border-4 border-white shadow-lg mb-4 object-cover">
+                <h3 id="hero-title" class="text-3xl font-bold text-yellow-900">...</h3>
+                <p id="hero-name" class="text-2xl text-yellow-700 font-bold mb-3">...</p>
+                <p id="hero-description" class="text-lg text-gray-700">...</p>
+            </div>
+
+            <!-- 키우면 좋을 히어로 -->
+            <div class="mt-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">🌱 이런 힘도 키워보면 어떨까요?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 추천 히어로 1 -->
+                    <div class="bg-gray-100 p-4 rounded-lg flex items-center shadow-sm text-left">
+                        <img id="grow-hero-image-1" src="" alt="추천 히어로 1" class="w-20 h-20 rounded-full border-2 border-white shadow-md object-cover flex-shrink-0">
+                        <div class="ml-4">
+                            <h4 id="grow-hero-title-1" class="text-lg font-bold text-blue-800">...</h4>
+                            <p id="grow-hero-name-1" class="text-md font-bold text-blue-600">...</p>
+                        </div>
+                    </div>
+                    <!-- 추천 히어로 2 -->
+                    <div class="bg-gray-100 p-4 rounded-lg flex items-center shadow-sm text-left">
+                        <img id="grow-hero-image-2" src="" alt="추천 히어로 2" class="w-20 h-20 rounded-full border-2 border-white shadow-md object-cover flex-shrink-0">
+                        <div class="ml-4">
+                            <h4 id="grow-hero-title-2" class="text-lg font-bold text-blue-800">...</h4>
+                            <p id="grow-hero-name-2" class="text-md font-bold text-blue-600">...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="restartQuiz()" class="bg-gray-700 hover:bg-gray-800 text-white text-xl font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform mt-12">
+                다시하기 🔁
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. 데이터베이스 ---
+        
+        // 10가지 학습자상(히어로) 정보
+        const profileData = {
+            inquirer: {
+                title: "탐구하는 사람 (Inquirers)",
+                hero: "모아나",
+                image: "https://i.namu.wiki/i/aDm8HWGXhXpUm9gK5uot_Q7ynZW-__SzBV1FBH5BcIsvrFBBZD_xGMNh-dI0s0CBWWgSmLeyNSFR5C56w9yHLjZ_0Ju6DD1UjW1OxvUyO-oY96MxR-cLBu94ChXsnJ1s3vPfIraUpfCDMMnkJfXaBQ.webp",
+                description: "당신은 호기심이 많고, '왜?'라는 질문을 멈추지 않아요. 산호초 너머의 세상을 탐험하는 것을 두려워하지 않죠!"
+            },
+            knowledgeable: {
+                title: "지식이 풍부한 사람 (Knowledgeable)",
+                hero: "토니 스타크(아이언맨)",
+                image: "https://i.namu.wiki/i/sB1Dnhl6QazD3A6JyUpUencoMaeLmW9FF2All6dqNju5ekCLOvVyEE3EknPsQTMinwUF-Hn1pzklInKWkPwrVNBqhtzzr7TZ7hVLHCU0YbvZdF65sa0RwCuiTuK-jV03th89liy3hXlXcml8T8qc_g.webp",
+                description: "당신은 과학, 공학 등 세상의 모든 지식을 사랑해요. 그 지식으로 멋진 슈트를 만들어 세상을 구하죠!"
+            },
+            thinker: {
+                title: "생각하는 사람 (Thinkers)",
+                hero: "주디 홉스",
+                image: "https://i.namu.wiki/i/uxBgoxnCZ8TtdaeAO5BKERQN-eZYcXzoX_y0gp4u48XkvcmzSMRibvExCdMX-IIqgRnIyk5uM5T8I7vwNVsnpB1TyKaNyPCHEPw39u74u0hRBDgp2zth2vmGVB3Ra2uu1LW8HqPe_ntzikQUqXXqpA.webp",
+                description: "당신은 복잡한 문제가 생겨도 포기하지 않아요. 단서를 분석하고, 창의적인 방법으로 멋지게 해결해내죠!"
+            },
+            communicator: {
+                title: "의사소통을 잘하는 사람 (Communicators)",
+                hero: "조이",
+                image: "https://i.namu.wiki/i/zmgSxzCQpngU-xH4RgR6Rqxhz2Qjm0xCiN4RtPNArfTODKejyOAgOb5cRLx0Dos-dkDw5mUvU1WpDps-pHHV1hXuHsNXr1U3wl9tLOYXywtKS8bx7Zk9uhaaMKL6UBzHPt0G3C8eEWuGlxPbbQ3zxA.webp",
+                description: "당신은 감정 본부의 리더! 언제나 긍정적으로 자신을 표현하고 다른 감정들(친구들)과 협력하며 팀을 이끌어요."
+            },
+            principled: {
+                title: "원칙을 지키는 사람 (Principled)",
+                hero: "우디",
+                image: "https://i.namu.wiki/i/d7ifAbx7RtHjJicEYH-i3JNpAaLRy1RX7exViR7ZIxq3En2e3GKLMzWgLSKs3BIyEr7aA5FFpV_ynvIk4Wm3djGlTD7an0gdrQsJOsHEaS6JLlqn2mhVtU5jAirWAWQh0f9m8OkRO744bzlnmBqxfw.webp",
+                description: "당신은 정직하고 공정한 것을 중요하게 생각해요. '주인을 기쁘게 한다'는 원칙을 지키는 책임감 있는 리더죠!"
+            },
+            open_minded: {
+                title: "열린 마음을 가진 사람 (Open-minded)",
+                hero: "스폰지밥",
+                image: "https://i.namu.wiki/i/FdTqiwM1M4YHfgpNt6V_k0ByUQK4QTaINf5IPutBk0hpQsHSI7_NM6_p07Q5n7DlPzx-Tw7FycO3CbO6KoQ2HeiCfJpMATFKw8PDTfGdFl3fM4n8H3y3k4kMJg-dst8chnLt9yZf2AKkAla74xFS-Q.webp",
+                description: "당신은 '비키니 시티'에서 만나는 모든 친구(징징이, 뚱이, 다람이)들을 편견 없이 받아들여요. 언제나 긍정적이고 새로운 것을 즐겁게 배우죠!"
+            },
+            caring: {
+                title: "배려하는 사람 (Caring)",
+                hero: "안나",
+                image: "https://i.namu.wiki/i/0KmEO_3v4Bn1dRvfv2KqhdwA7t6oWrRcClr_0kuLhzNbvGd-vjep9XYVB7A11CIdf6xgPdk7Bmpdo9iF9tEX73zuFG1IV_FGuwqMRf4GJLsprp6i5YeZutf-X_k726HoI5eN4strZDJrmpfWyZi4Kg.webp",
+                description: "당신은 친구가 어려울 때, 자신의 위험을 생각하지 않고 가장 먼저 달려가요. 따뜻한 마음으로 모두를 돕죠."
+            },
+            risk_taker: {
+                title: "도전하는 사람 (Risk-takers)",
+                hero: "루미",
+                image: "https://i.namu.wiki/i/1Q64OnuFmr4WfwDqK5Lnmn7em9chWSVYyB0ZWqzwf9rSECNcqaGOpXJNNVHNb_zjY89SinCj58nD4JTd9OxyM-QIeWLtFbxC1fNxiCiXORjxbIuNPNc7W4vznAVzQWJVk2RYtWcHCHCQ6rdYq55KVQ.webp",
+                description: "당신은 '헌트릭스'의 리더! 악령(귀마)과 싸우는 불확실하고 위험한 상황에 용감하게 맞서고, 모두를 지키기 위해 도전해요."
+            },
+            balanced: {
+                title: "균형 잡힌 사람 (Balanced)",
+                hero: "뽀로로",
+                image: "https://i.namu.wiki/i/xDpBqM9xT2dmPxVnz5cixNzXaedZncmInmih3HtCllMjOTJpChHous-RnzOhxtTu63gER-2WJ-9DxkgiEgbszTrBKfgJUQecPOmpiTgWbegmdTnw1y1zq_66XnlJ8ExCydqyqlfajEzzBg_LISTaAQ.webp",
+                description: "당신은 '노는 게 제일 좋아!'라고 외치며 친구들과 신나게 놀고(신체/감정), 썰매를 발명하기도 하죠(지성). 노는 것과 배우는 것 모두 즐거워요!"
+            },
+            reflective: {
+                title: "성찰하는 사람 (Reflective)",
+                hero: "엘사",
+                image: "https://thumb.mt.co.kr/cdn-cgi/image/f=avif/06/2014/11/2014112917244066991_1.jpg",
+                description: "당신은 자신의 과거를 돌아보며 '나는 누구인가?' 깊이 생각해요. 자신의 진짜 힘(강점)을 깨닫게 되죠."
+            }
+        };
+
+        // --- 2. 퀴즈 로직 ---
+
+        let scores = {}; // 점수 기록 객체
+        let currentQuestion = 0; // 현재 질문 번호
+        const totalQuestions = 10;
+
+        // 페이지 보이기/숨기기
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // 질문 슬라이드
+        function showQuestion(questionNumber) {
+            document.querySelectorAll('.question-slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            const nextSlide = document.getElementById(`question-${questionNumber + 1}`);
+            if (nextSlide) {
+                nextSlide.classList.add('active');
+                
+                // 진행도 업데이트
+                currentQuestion = questionNumber;
+                document.getElementById('question-counter').innerText = `질문 ${currentQuestion + 1} / ${totalQuestions}`;
+                document.getElementById('progress-bar').style.width = `${((currentQuestion + 1) / totalQuestions) * 100}%`;
+            } else {
+                // 퀴즈 종료, 결과 표시
+                showResult();
+            }
+        }
+
+        // 퀴즈 시작
+        function startQuiz() {
+            // 점수 초기화
+            scores = {
+                inquirer: 0,
+                knowledgeable: 0,
+                thinker: 0,
+                communicator: 0,
+                principled: 0,
+                open_minded: 0,
+                caring: 0,
+                risk_taker: 0,
+                balanced: 0,
+                reflective: 0
+            };
+            
+            currentQuestion = 0;
+            showPage('quiz-page');
+            showQuestion(0);
+        }
+
+        // 답변 선택
+        function selectAnswer(profileKey, questionIndex) {
+            // 점수 1점씩 추가
+            if (scores[profileKey] !== undefined) {
+                scores[profileKey]++;
+            }
+
+            // 다음 질문으로 이동
+            showQuestion(questionIndex);
+        }
+
+        // 결과 계산 및 표시
+        function showResult() {
+            // 점수 객체를 배열로 변환 [ [key, score], ... ]
+            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+            // 1등 히어로 (대표 히어로)
+            const mainHeroKey = sortedScores[0][0];
+            const mainHero = profileData[mainHeroKey];
+            
+            // 꼴등 2명 (키우면 좋을 히어로) - 10위, 9위
+            const growHeroKey1 = sortedScores[sortedScores.length - 1][0];
+            const growHero1 = profileData[growHeroKey1];
+            
+            const growHeroKey2 = sortedScores[sortedScores.length - 2][0];
+            const growHero2 = profileData[growHeroKey2];
+
+            // 1. 대표 히어로 정보 업데이트
+            document.getElementById('hero-image').src = mainHero.image;
+            document.getElementById('hero-title').innerText = mainHero.title;
+            document.getElementById('hero-name').innerText = `"${mainHero.hero}" 타입!`;
+            document.getElementById('hero-description').innerText = mainHero.description;
+
+            // 2. 추천 히어로 1 정보 업데이트
+            document.getElementById('grow-hero-image-1').src = growHero1.image;
+            document.getElementById('grow-hero-title-1').innerText = growHero1.title;
+            document.getElementById('grow-hero-name-1').innerText = growHero1.hero;
+
+            // 3. 추천 히어로 2 정보 업데이트
+            document.getElementById('grow-hero-image-2').src = growHero2.image;
+            document.getElementById('grow-hero-title-2').innerText = growHero2.title;
+            document.getElementById('grow-hero-name-2').innerText = growHero2.hero;
+
+            // 결과 페이지 보이기
+            showPage('result-page');
+        }
+
+        // 퀴즈 다시 시작
+        function restartQuiz() {
+            showPage('start-page');
+        }
+
+    </script>
+</body>
+</html>
